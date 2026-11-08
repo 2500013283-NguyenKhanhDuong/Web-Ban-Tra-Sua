@@ -1,0 +1,162 @@
+﻿@model IEnumerable<WebBanTraSua.Models.CartItem>
+
+@{
+    ViewBag.Title = "Thanh Toán Đơn Hàng";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Trà Sữa Dương</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #fffaf0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar-custom {
+            background: linear-gradient(135deg, #d4a373, #faedcd);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #5e3023 !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-custom {
+            background-color: #5e3023;
+            color: #faedcd;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+
+        .checkout-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(212, 163, 115, 0.2);
+            padding: 30px;
+            border: none;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #d4a373;
+        }
+
+            .form-control:focus {
+                box-shadow: 0 0 0 0.25rem rgba(212, 163, 115, 0.25);
+                border-color: #d4a373;
+            }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #2a9d8f, #264653);
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 30px;
+            padding: 15px;
+            transition: 0.3s;
+            font-size: 1.2rem;
+        }
+
+            .btn-confirm:hover {
+                opacity: 0.9;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(42, 157, 143, 0.4);
+                color: white;
+            }
+
+        .summary-item {
+            border-bottom: 1px dashed #e6d5c3;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top mb-5">
+        <div class="container">
+            <a class="navbar-brand" href="/TraSua"><i class="fa-solid fa-mug-hot me-2"></i>Trà Sữa Dương</a>
+        </div>
+    </nav>
+
+    <div class="container mb-5">
+        <div class="row g-4">
+            <!-- Form thông tin giao hàng -->
+            <div class="col-lg-7">
+                <div class="checkout-card">
+                    <h3 class="fw-bold mb-4" style="color: #5e3023;"><i class="fa-solid fa-truck-fast me-2"></i>Thông Tin Giao Hàng</h3>
+                    <form method="post" action="/GioHang/DatHang">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">Họ và tên người nhận</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-user text-muted"></i></span>
+                                <input type="text" name="HoTen" class="form-control border-start-0" placeholder="Nhập tên của bạn" required />
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">Số điện thoại liên hệ</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-phone text-muted"></i></span>
+                                <input type="tel" name="SoDienThoai" class="form-control border-start-0" placeholder="09xx xxx xxx" required />
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">Địa chỉ chi tiết (Số nhà, đường, phường/xã)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-map-location-dot text-muted"></i></span>
+                                <textarea name="DiaChi" class="form-control border-start-0" rows="3" placeholder="Nhập địa chỉ giao hàng" required></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-confirm w-100 mt-3"><i class="fa-solid fa-circle-check me-2"></i>Hoàn Tất Đặt Hàng</button>
+                        <a href="/GioHang" class="btn btn-outline-secondary w-100 rounded-pill mt-3 fw-bold py-2"><i class="fa-solid fa-arrow-left me-2"></i>Quay lại kiểm tra giỏ hàng</a>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tóm tắt đơn hàng bên phải -->
+            <div class="col-lg-5">
+                <div class="checkout-card" style="background-color: #faedcd;">
+                    <h4 class="fw-bold mb-4" style="color: #5e3023;"><i class="fa-solid fa-receipt me-2"></i>Tóm Tắt Đơn Hàng</h4>
+                    <div class="mb-4">
+                        @foreach (var item in Model)
+                        {
+                            <div class="summary-item d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge bg-dark rounded-circle me-2">@item.SoLuong</span>
+                                    <span class="fw-bold" style="color: #5e3023;">@item.TenSanPham</span>
+                                </div>
+                                <span class="text-danger fw-bold">@item.ThanhTien.ToString("N0")đ</span>
+                            </div>
+                        }
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top border-dark border-2">
+                        <span class="fs-5 fw-bold text-uppercase" style="color: #5e3023;">Tổng Cần Thanh Toán:</span>
+                        <span class="fs-3 fw-bold text-danger">@ViewBag.TongTien.ToString("N0")đ</span>
+                    </div>
+                    <div class="alert alert-info border-0 mt-4 bg-white" style="border-radius: 15px;">
+                        <i class="fa-solid fa-info-circle me-2 text-info"></i>Thanh toán bằng tiền mặt khi nhận hàng (COD).
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-custom">
+        <div class="container text-center">
+            <h4 class="fw-bold mb-3"><i class="fa-solid fa-mug-hot me-2"></i>Trà Sữa Dương</h4>
+            <p class="mb-1">Hệ thống đồ uống thiết kế với kiến trúc MVC</p>
+            <p class="small text-white-50">© 2026 - Bản quyền thuộc về sinh viên thực hiện đồ án</p>
+        </div>
+    </footer>
+</body>
+</html>

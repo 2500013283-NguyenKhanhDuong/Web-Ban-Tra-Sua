@@ -1,0 +1,245 @@
+﻿@model WebBanTraSua.Models.TraSua
+
+@{
+    ViewBag.Title = Model.TenMon;
+    Layout = null;
+
+    var gioHang = Session["GioHang"] as List<WebBanTraSua.Models.CartItem>;
+    int tongSoLuongGioHang = gioHang != null ? gioHang.Sum(x => x.SoLuong) : 0;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Trà Sữa Dương</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #fffaf0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar-custom {
+            background-color: #5e3023;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            padding: 12px 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #faedcd !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(212, 163, 115, 0.2);
+            border: none;
+            overflow: hidden;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        .detail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            min-height: 400px;
+        }
+
+        .detail-content {
+            padding: 50px;
+        }
+
+        .badge-category {
+            background-color: #ccd5ae;
+            color: #5e3023;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .detail-title {
+            color: #5e3023;
+            font-weight: 900;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .detail-desc {
+            color: #6c757d;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .detail-price {
+            color: #e76f51;
+            font-weight: 900;
+            font-size: 2rem;
+            margin-bottom: 40px;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #e76f51, #f4a261);
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 30px;
+            padding: 15px 30px;
+            transition: 0.3s;
+            font-size: 1.1rem;
+        }
+
+            .btn-add:hover {
+                opacity: 0.9;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(231,111,81,0.4);
+                color: white;
+            }
+
+        .btn-cart {
+            background: transparent;
+            border: 2px solid #5e3023;
+            color: #5e3023;
+            font-weight: bold;
+            border-radius: 30px;
+            padding: 13px 30px;
+            transition: 0.3s;
+            font-size: 1.1rem;
+        }
+
+            .btn-cart:hover {
+                background: #5e3023;
+                color: white;
+            }
+
+        .footer-custom {
+            background-color: #5e3023;
+            color: #faedcd;
+            padding: 40px 0 20px;
+            margin-top: auto;
+        }
+
+        .cart-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        #cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background-color: #e76f51;
+            color: white;
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand text-decoration-none" href="/TraSua"><i class="fa-solid fa-mug-hot me-2 text-warning"></i>Trà Sữa Dương</a>
+            <div class="d-flex align-items-center">
+                <a class="btn btn-outline-light border-2 fw-bold rounded-pill me-3 px-4 shadow-sm" href="/TraSua">
+                    <i class="fa-solid fa-house me-1"></i> Trang Chủ
+                </a>
+                <div class="cart-wrapper me-3">
+                    <a class="btn btn-warning fw-bold rounded-pill px-4 shadow-sm text-dark" href="/GioHang">
+                        <i class="fa-solid fa-cart-shopping me-1"></i> Giỏ Hàng
+                    </a>
+                    <span id="cart-badge" style="display: @(tongSoLuongGioHang > 0 ? "block" : "none")">@tongSoLuongGioHang</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card detail-card">
+            <div class="row g-0">
+                <div class="col-md-5">
+                    <img src="@Model.HinhAnh" alt="@Model.TenMon" class="detail-img">
+                </div>
+                <div class="col-md-7 d-flex align-items-center">
+                    <div class="detail-content w-100">
+                        <span class="badge-category"><i class="fa-solid fa-leaf me-2"></i>@Model.DanhMuc</span>
+                        <h1 class="detail-title">@Model.TenMon</h1>
+                        <p class="detail-desc">@Model.MoTa</p>
+                        <div class="detail-price">@Model.Gia.ToString("N0")đ</div>
+
+                        <div class="d-flex gap-3 mt-4">
+                            <button onclick="themVaoGioNgay(@Model.Id)" class="btn btn-add flex-grow-1"><i class="fa-solid fa-cart-plus me-2"></i>Cho vào giỏ hàng</button>
+                            <a href="/GioHang" class="btn btn-cart"><i class="fa-solid fa-eye me-2"></i>Xem giỏ hàng</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-custom">
+        <div class="container text-center">
+            <h4 class="fw-bold mb-3"><i class="fa-solid fa-mug-hot me-2"></i>Trà Sữa Dương</h4>
+            <p class="mb-1">Hệ thống đồ uống thiết kế với kiến trúc MVC</p>
+            <p class="small text-white-50">© 2026 - Bản quyền thuộc về sinh viên thực hiện đồ án</p>
+        </div>
+    </footer>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
+        <div id="cartToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body fw-bold" id="toastMessage">Đã thêm vào giỏ hàng!</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function themVaoGioNgay(idSanPham) {
+            fetch('/GioHang/ThemVaoGioAjax', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'id=' + idSanPham
+            })
+            .then(response => response.json())
+            .then(data => {
+                var toastEl = document.getElementById('cartToast');
+                var toastMessage = document.getElementById('toastMessage');
+                var toast = new bootstrap.Toast(toastEl);
+
+                if (data.success) {
+                    var badge = document.getElementById('cart-badge');
+                    badge.innerText = data.tongSoLuong;
+                    badge.style.display = 'block';
+                    toastEl.classList.remove('bg-danger');
+                    toastEl.classList.add('bg-success');
+                    toastMessage.innerText = "Đã thêm món vào giỏ hàng!";
+                } else {
+                    toastEl.classList.remove('bg-success');
+                    toastEl.classList.add('bg-danger');
+                    toastMessage.innerText = data.message;
+                }
+                toast.show();
+            })
+            .catch(error => console.error('Lỗi:', error));
+        }
+    </script>
+</body>
+</html>
